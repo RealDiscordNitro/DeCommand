@@ -1,109 +1,56 @@
-<script>
-    // Main functionality
-    function isLetter(str) {
-        return /^[a-zA-Z\s]+$/.test(str);
-    }
-
-    function isNumber(str) {
-        return /^[0-9*/]+$/.test(str);
-    }
-
-    function caesarShiftNumbers(nums, amount) {
-        return nums.split('*').map(num => {
-            if (num === '/') return num;
-            let shiftedNum = (parseInt(num) + amount + 26) % 26;
-            return shiftedNum.toString();
-        }).join('*');
-    }
-
-    function lettersToNumbers(str) {
-        return str.split('').map(char => {
-            if (char === ' ') return '/';
-            return (char.charCodeAt(0) - 97).toString();
-        }).join('*');
-    }
-
-    function numbersToLetters(nums) {
-        return nums.split('*').map(num => {
-            if (num === '/') return ' ';
-            return String.fromCharCode(parseInt(num) + 97);
-        }).join('');
-    }
-
-    function vigenereCipher(text, key, encrypt = true) {
-        let result = '';
-        let keyIndex = 0;
-
-        for (let i = 0; i < text.length; i++) {
-            let c = text[i];
-            if (c.match(/[a-z]/i)) {
-                let textCharCode = text.charCodeAt(i);
-                let keyCharCode = key.charCodeAt(keyIndex % key.length) - 97;
-                if (encrypt) {
-                    if (textCharCode >= 65 && textCharCode <= 90) {
-                        result += String.fromCharCode((textCharCode - 65 + keyCharCode) % 26 + 65);
-                    } else if (textCharCode >= 97 && textCharCode <= 122) {
-                        result += String.fromCharCode((textCharCode - 97 + keyCharCode) % 26 + 97);
-                    }
-                } else {
-                    if (textCharCode >= 65 && textCharCode <= 90) {
-                        result += String.fromCharCode((textCharCode - 65 - keyCharCode + 26) % 26 + 65);
-                    } else if (textCharCode >= 97 && textCharCode <= 122) {
-                        result += String.fromCharCode((textCharCode - 97 - keyCharCode + 26) % 26 + 97);
-                    }
-                }
-                keyIndex++;
-            } else {
-                result += c;
-            }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About - Encrypt and Decrypt Tool</title>
+    <style>
+        * {
+            font-family: Arial, sans-serif;
         }
-        return result;
-    }
-
-    function copyToClipboard(id) {
-        const output = document.getElementById(id).textContent;
-        navigator.clipboard.writeText(output)
-            .then(() => alert('Copied to clipboard'))
-            .catch(err => console.error('Failed to copy', err));
-    }
-
-    function encrypt() {
-        let input = document.getElementById('encryptInput').value.toLowerCase();
-        let errorBox = document.getElementById('encryptError');
-        let outputBox = document.getElementById('encryptOutput');
-
-        errorBox.textContent = '';
-        outputBox.textContent = '';
-
-        if (!isLetter(input)) {
-            errorBox.textContent = 'Error: ONLY LETTERS';
-            return;
+        body {
+            padding: 20px;
         }
-
-        let vigenereEncrypted = vigenereCipher(input, keyword);
-        let numbers = lettersToNumbers(vigenereEncrypted);
-        let finalOutput = caesarShiftNumbers(numbers, 21);
-
-        outputBox.textContent = finalOutput;
-    }
-
-    function decrypt() {
-        let input = document.getElementById('decryptInput').value;
-        let errorBox = document.getElementById('decryptError');
-        let outputBox = document.getElementById('decryptOutput');
-
-        errorBox.textContent = '';
-        outputBox.textContent = '';
-
-        if (!isNumber(input.replace(/\s+/g, ''))) {
-            errorBox.textContent = 'Error: ONLY NUMBERS';
-            return;
+        .content {
+            max-width: 600px;
+            margin: auto;
         }
-
-        let shifted = caesarShiftNumbers(input, -21);
-        let letters = numbersToLetters(shifted);
-        let finalOutput = vigenereCipher(letters, keyword, false);
-
-        outputBox.textContent = finalOutput;
-    }
-</script>
+        h1 {
+            text-align: center;
+        }
+        p {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        .back-button {
+            display: block;
+            width: 100px;
+            padding: 10px 15px;
+            margin: 20px auto;
+            border: none;
+            border-radius: 4px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>About the Encrypt and Decrypt Tool</h1>
+        <p>This tool is designed to help you encrypt and decrypt messages using a combination of Caesar Cipher and Vigenère Cipher techniques. It provides a simple interface to input your text or numeric codes and perform the desired encryption or decryption operations.</p>
+        <h2>How to Use</h2>
+        <p><strong>Encrypt:</strong> To encrypt a message, click the "Encrypt" button. Enter the text you want to encrypt in the provided input box and press "Submit". The tool will encrypt the text using a Vigenère Cipher with the keyword "ComeToTheCartelsCasino", convert the letters to numbers, and then apply a Caesar Cipher with a shift of 21. The encrypted message will be displayed in the output box.</p>
+        <p><strong>Decrypt:</strong> To decrypt a message, click the "Decrypt" button. Enter the numeric code you want to decrypt in the provided input box and press "Submit". The tool will reverse the Caesar Cipher shift, convert the numbers back to letters, and then decrypt the text using the Vigenère Cipher with the same keyword. The decrypted message will be displayed in the output box.</p>
+        <h2>Technical Details</h2>
+        <p>The tool uses JavaScript to handle the encryption and decryption processes. The Vigenère Cipher is a method of encrypting alphabetic text by using a simple form of polyalphabetic substitution. The Caesar Cipher is a type of substitution cipher in which each letter in the plaintext is shifted a certain number of places down the alphabet.</p>
+        <a href="index.html" class="back-button">Back to Tool</a>
+    </div>
+</body>
+</html>
