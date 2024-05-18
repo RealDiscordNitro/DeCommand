@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Encrypt and Decrypt Tool</title>
+    <style>
+        * {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h2, p {
+            margin: 0;
+        }
+        .hidden {
+            display: none;
+        }
+        .block {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Encrypt and Decrypt Tool</h1>
+    <button onclick="switchToEncrypt()">Encrypt</button>
+    <button onclick="switchToDecrypt()">Decrypt</button>
+
+    <div id="encryptSection" class="hidden">
+        <h2>Encrypt</h2>
+        <input id="encryptInput" placeholder="Enter text to encrypt">
+        <button onclick="encrypt()">Submit</button>
+        <button onclick="copyToClipboard('encryptOutput')">Copy</button>
+        <p id="encryptError" style="color:red;"></p>
+        <p id="encryptOutput"></p>
+    </div>
+
+    <div id="decryptSection" class="hidden">
+        <h2>Decrypt</h2>
+        <input id="decryptInput" placeholder="Enter numbers to decrypt">
+        <button onclick="decrypt()">Submit</button>
+        <button onclick="copyToClipboard('decryptOutput')">Copy</button>
+        <p id="decryptError" style="color:red;"></p>
+        <p id="decryptOutput"></p>
+    </div>
+
+    <script>
+        // Initial JavaScript functions
+        const keyword = "ComeToTheCartelsCasino".toLowerCase();
+
+        function switchToEncrypt() {
+            document.getElementById('encryptSection').classList.remove('hidden');
+            document.getElementById('decryptSection').classList.add('hidden');
+        }
+
+        function switchToDecrypt() {
+            document.getElementById('decryptSection').classList.remove('hidden');
+            document.getElementById('encryptSection').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
