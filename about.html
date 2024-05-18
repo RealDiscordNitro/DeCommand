@@ -1,0 +1,109 @@
+<script>
+    // Main functionality
+    function isLetter(str) {
+        return /^[a-zA-Z\s]+$/.test(str);
+    }
+
+    function isNumber(str) {
+        return /^[0-9*/]+$/.test(str);
+    }
+
+    function caesarShiftNumbers(nums, amount) {
+        return nums.split('*').map(num => {
+            if (num === '/') return num;
+            let shiftedNum = (parseInt(num) + amount + 26) % 26;
+            return shiftedNum.toString();
+        }).join('*');
+    }
+
+    function lettersToNumbers(str) {
+        return str.split('').map(char => {
+            if (char === ' ') return '/';
+            return (char.charCodeAt(0) - 97).toString();
+        }).join('*');
+    }
+
+    function numbersToLetters(nums) {
+        return nums.split('*').map(num => {
+            if (num === '/') return ' ';
+            return String.fromCharCode(parseInt(num) + 97);
+        }).join('');
+    }
+
+    function vigenereCipher(text, key, encrypt = true) {
+        let result = '';
+        let keyIndex = 0;
+
+        for (let i = 0; i < text.length; i++) {
+            let c = text[i];
+            if (c.match(/[a-z]/i)) {
+                let textCharCode = text.charCodeAt(i);
+                let keyCharCode = key.charCodeAt(keyIndex % key.length) - 97;
+                if (encrypt) {
+                    if (textCharCode >= 65 && textCharCode <= 90) {
+                        result += String.fromCharCode((textCharCode - 65 + keyCharCode) % 26 + 65);
+                    } else if (textCharCode >= 97 && textCharCode <= 122) {
+                        result += String.fromCharCode((textCharCode - 97 + keyCharCode) % 26 + 97);
+                    }
+                } else {
+                    if (textCharCode >= 65 && textCharCode <= 90) {
+                        result += String.fromCharCode((textCharCode - 65 - keyCharCode + 26) % 26 + 65);
+                    } else if (textCharCode >= 97 && textCharCode <= 122) {
+                        result += String.fromCharCode((textCharCode - 97 - keyCharCode + 26) % 26 + 97);
+                    }
+                }
+                keyIndex++;
+            } else {
+                result += c;
+            }
+        }
+        return result;
+    }
+
+    function copyToClipboard(id) {
+        const output = document.getElementById(id).textContent;
+        navigator.clipboard.writeText(output)
+            .then(() => alert('Copied to clipboard'))
+            .catch(err => console.error('Failed to copy', err));
+    }
+
+    function encrypt() {
+        let input = document.getElementById('encryptInput').value.toLowerCase();
+        let errorBox = document.getElementById('encryptError');
+        let outputBox = document.getElementById('encryptOutput');
+
+        errorBox.textContent = '';
+        outputBox.textContent = '';
+
+        if (!isLetter(input)) {
+            errorBox.textContent = 'Error: ONLY LETTERS';
+            return;
+        }
+
+        let vigenereEncrypted = vigenereCipher(input, keyword);
+        let numbers = lettersToNumbers(vigenereEncrypted);
+        let finalOutput = caesarShiftNumbers(numbers, 21);
+
+        outputBox.textContent = finalOutput;
+    }
+
+    function decrypt() {
+        let input = document.getElementById('decryptInput').value;
+        let errorBox = document.getElementById('decryptError');
+        let outputBox = document.getElementById('decryptOutput');
+
+        errorBox.textContent = '';
+        outputBox.textContent = '';
+
+        if (!isNumber(input.replace(/\s+/g, ''))) {
+            errorBox.textContent = 'Error: ONLY NUMBERS';
+            return;
+        }
+
+        let shifted = caesarShiftNumbers(input, -21);
+        let letters = numbersToLetters(shifted);
+        let finalOutput = vigenereCipher(letters, keyword, false);
+
+        outputBox.textContent = finalOutput;
+    }
+</script>
